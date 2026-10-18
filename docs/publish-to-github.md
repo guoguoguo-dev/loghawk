@@ -1,7 +1,7 @@
 # 将 LogHawk 发布到 GitHub
 
 本文以 **Windows PowerShell + HTTPS** 为主路径，同时给出 SSH 与 GitHub CLI 方案。
-所有命令都可以逐条复制执行；尖括号 `<...>` 中的内容需要替换为你自己的信息。
+以下命令对应当前仓库的实际地址与身份配置，可直接执行。
 
 ## 0. 前置检查
 
@@ -18,7 +18,7 @@ python -m unittest discover -s tests -v
 
 - Python 输出为 3.9 或更高版本；
 - 28 项测试全部 `OK`；
-- 当前目录包含 `README.md`、`loghawk/`、`samples/` 等文件；
+- 当前目录包含 `README.md`、`loghawk/`、`demo/` 等文件；
 - 没有把真实生产日志、Token、私钥或 `.env` 文件放入目录。
 
 检查 Git 身份（只需配置一次）：
@@ -28,15 +28,14 @@ git config --get user.name
 git config --get user.email
 ```
 
-若为空，配置**你自己的**姓名与邮箱：
+若为空，配置当前仓库使用的身份：
 
 ```powershell
-git config --global user.name "Your Name"
-git config --global user.email "you@example.com"
+git config --local user.name "guoguoguo-dev"
+git config --local user.email "256551196+guoguoguo-dev@users.noreply.github.com"
 ```
 
-> 这里应使用你希望公开出现在提交历史中的邮箱。若担心隐私，可使用 GitHub 提供的
-> `noreply` 邮箱。
+> 当前使用 GitHub 提供的 `noreply` 邮箱，不会暴露私人邮箱。
 
 ## 1. 本地初始化与首次提交
 
@@ -78,17 +77,17 @@ nothing to commit, working tree clean
 ## 2. 在 GitHub 创建空仓库
 
 1. 登录 GitHub，打开 <https://github.com/new>。
-2. **Repository name** 填写 `loghawk`（也可用其他名称，后续 URL 同步替换）。
+2. **Repository name** 填写 `loghawk`。
 3. **Description** 可填写：
    `Lightweight, offline SSH authentication log threat analyzer`
 4. 选择 **Public**；如果暂时不想公开，选择 **Private** 也可以。
 5. **不要**勾选 `Add a README file`、`Add .gitignore`、`Choose a license`。
    本项目已经包含这些文件，初始化远程会制造额外提交与推送冲突。
 6. 点击 **Create repository**。
-7. 在仓库页面复制 HTTPS 地址，形如：
+7. 仓库的 HTTPS 地址如下：
 
    ```text
-   https://github.com/<your-name>/loghawk.git
+   https://github.com/guoguoguo-dev/loghawk.git
    ```
 
 > 仓库名、用户名和地址必须完全对应。GitHub 用户名不区分大小写，但 URL 中的路径
@@ -97,7 +96,7 @@ nothing to commit, working tree clean
 ## 3. 关联远程仓库并推送
 
 ```powershell
-git remote add origin https://github.com/<your-name>/loghawk.git
+git remote add origin https://github.com/guoguoguo-dev/loghawk.git
 git remote -v
 git branch -M main
 git push -u origin main
@@ -122,16 +121,12 @@ branch 'main' set up to track 'origin/main'.
 若 `origin` 已存在但地址错误：
 
 ```powershell
-git remote set-url origin https://github.com/<your-name>/loghawk.git
+git remote set-url origin https://github.com/guoguoguo-dev/loghawk.git
 git remote -v
 ```
 
-不要用下面的方式把 Token 写进远程地址，否则 Token 可能进入 shell 历史或截图：
+不要把 Token 拼进远程地址，否则 Token 可能进入 shell 历史或截图。
 
-```text
-# 不要这样做
-https://ghp_xxx@github.com/<your-name>/loghawk.git
-```
 
 ## 4. 认证方式
 
@@ -166,7 +161,7 @@ Token 只应保存在系统凭据管理器中，不要写入脚本、README 或�
 ### 方案 C：SSH
 
 ```powershell
-ssh-keygen -t ed25519 -C "you@example.com"
+ssh-keygen -t ed25519 -C "256551196+guoguoguo-dev@users.noreply.github.com"
 Get-Content "$env:USERPROFILE\.ssh\id_ed25519.pub" | Set-Clipboard
 ```
 
@@ -174,7 +169,7 @@ Get-Content "$env:USERPROFILE\.ssh\id_ed25519.pub" | Set-Clipboard
 
 ```powershell
 ssh -T git@github.com
-git remote set-url origin git@github.com:<your-name>/loghawk.git
+git remote set-url origin git@github.com:guoguoguo-dev/loghawk.git
 git push -u origin main
 ```
 
@@ -210,13 +205,13 @@ git ls-remote --heads origin
 然后在浏览器打开：
 
 ```text
-https://github.com/<your-name>/loghawk
+https://github.com/guoguoguo-dev/loghawk
 ```
 
 检查：
 
 - README 正常渲染，中文无乱码；
-- `loghawk/`、`samples/`、`tests/` 等目录完整；
+- `loghawk/`、`demo/`、`tests/` 等目录完整；
 - **Actions** 页面中的 CI 工作流通过；
 - 仓库首页的 License 显示为 MIT；
 - `git status` 没有未提交文件。
@@ -238,7 +233,7 @@ git push origin v0.1.0
 
 然后：
 
-1. 打开 `https://github.com/<your-name>/loghawk/releases/new`；
+1. 打开 `https://github.com/guoguoguo-dev/loghawk/releases/new`；
 2. **Choose a tag** 选择 `v0.1.0`；
 3. **Release title** 填写 `LogHawk v0.1.0`；
 4. 从 [CHANGELOG.md](../CHANGELOG.md) 复制 `0.1.0` 段落作为发布说明；
@@ -277,7 +272,7 @@ git status
 说明已经添加过远程地址，改用：
 
 ```powershell
-git remote set-url origin https://github.com/<your-name>/loghawk.git
+git remote set-url origin https://github.com/guoguoguo-dev/loghawk.git
 git remote -v
 ```
 
@@ -303,7 +298,7 @@ SSH Key 未添加到 GitHub，或当前仓库仍使用 HTTPS：
 ```powershell
 ssh -T git@github.com
 git remote -v
-git remote set-url origin git@github.com:<your-name>/loghawk.git
+git remote set-url origin git@github.com:guoguoguo-dev/loghawk.git
 ```
 
 ### `Updates were rejected because the remote contains work...`
@@ -351,7 +346,7 @@ $env:PYTHONUTF8 = "1"
 
 ```powershell
 python -m unittest discover -s tests -v
-python -m loghawk samples/auth.log --fail-on never
+python -m loghawk demo/auth.log --fail-on never
 ```
 
 再检查 GitHub Actions 日志中的 Python 版本与失败测试名。CI 矩阵覆盖 Python 3.9 与
@@ -361,7 +356,6 @@ python -m loghawk samples/auth.log --fail-on never
 
 - [ ] `python -m unittest discover -s tests -v` 全部通过
 - [ ] `git status` 干净，无 `.env`、Token、私钥或真实日志
-- [ ] README 中的 `<your-name>` 等占位符已按需替换
 - [ ] 远程仓库为空仓库，未额外初始化 README/License
 - [ ] `git remote -v` 指向正确仓库
 - [ ] 首次 `git push -u origin main` 成功

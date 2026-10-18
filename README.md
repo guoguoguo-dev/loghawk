@@ -14,7 +14,7 @@ LogHawk 面向安全运维、应急响应与安全学习者：它把分散在数
 
 > [!IMPORTANT]
 > 本项目仅用于**已获授权的安全测试、日志审计与学习研究**。使用前请确认你对目标
-> 主机与日志拥有合法访问权限。示例日志中的 IP 均来自 RFC 5737 文档保留网段。
+> 主机与日志拥有合法访问权限。演示日志中的 IP 均来自 RFC 5737 文档保留网段。
 
 ## 目录
 
@@ -51,16 +51,16 @@ LogHawk 面向安全运维、应急响应与安全学习者：它把分散在数
 不需要安装任何第三方依赖。在仓库根目录直接运行：
 
 ```bash
-python -m loghawk samples/auth.log
+python -m loghawk demo/auth.log
 ```
 
 macOS/Linux 若 `python` 指向 Python 2，请改用 `python3`。
 
-示例输出（节选）：
+输出参考（节选）：
 
 ```text
 LogHawk 0.1.0 | SSH 认证日志威胁分析
-输入: samples/auth.log
+输入: demo/auth.log
 解析: 共 25 行 / 认证事件 17 条 / 忽略 8 行
 配置: 失败阈值 5 次，窗口 5 分钟，成功回溯 10 分钟，枚举阈值 3 个用户名
 ------------------------------------------------------------------------
@@ -80,11 +80,11 @@ LogHawk 0.1.0 | SSH 认证日志威胁分析
   ...
 ```
 
-示例数据命中 3 条规则，因此命令默认以退出码 `1` 结束。若只想查看报告而不让 CI
+演示数据命中 3 条规则，因此命令默认以退出码 `1` 结束。若只想查看报告而不让 CI
 判定失败：
 
 ```bash
-python -m loghawk samples/auth.log --fail-on never
+python -m loghawk demo/auth.log --fail-on never
 ```
 
 ### 分析真实日志
@@ -110,7 +110,7 @@ journalctl -u ssh --no-pager -o short | python -m loghawk -
 
 ```bash
 python -m pip install .
-loghawk samples/auth.log
+loghawk demo/auth.log
 ```
 
 安装过程只读取打包元数据；项目没有运行时第三方依赖。
@@ -122,7 +122,7 @@ loghawk samples/auth.log
 ```powershell
 chcp 65001 > $null
 $env:PYTHONUTF8 = "1"
-python -m loghawk samples/auth.log
+python -m loghawk demo/auth.log
 ```
 
 这只影响显示，不影响检测结果或 JSON 文件内容。LogHawk 在非 UTF-8 输出流上会自动
@@ -181,35 +181,35 @@ python -m loghawk [path] [options]
 | `--version` | - | 显示版本并退出 |
 | `-h, --help` | - | 显示帮助并退出 |
 
-常用示例：
+常用用法：
 
 ```bash
 # 更敏感：3 次失败即告警，窗口 10 分钟
-python -m loghawk samples/auth.log --failed-threshold 3 --window 10
+python -m loghawk demo/auth.log --failed-threshold 3 --window 10
 
 # 只输出高危与严重告警
-python -m loghawk samples/auth.log --min-severity HIGH
+python -m loghawk demo/auth.log --min-severity HIGH
 
 # 历史日志 + JSON 报告
-python -m loghawk samples/auth.log --year 2025 --format json
+python -m loghawk demo/auth.log --year 2025 --format json
 
 # 仅当出现 CRITICAL 时让流水线失败
-python -m loghawk samples/auth.log --fail-on CRITICAL
+python -m loghawk demo/auth.log --fail-on CRITICAL
 ```
 
 ## JSON 输出
 
 ```bash
-python -m loghawk samples/auth.log --format json
+python -m loghawk demo/auth.log --format json
 ```
 
-结构示例（省略部分字段）：
+结构参考（省略部分字段）：
 
 ```json
 {
   "tool": { "name": "LogHawk", "version": "0.1.0" },
   "input": {
-    "source": "samples/auth.log",
+    "source": "demo/auth.log",
     "total_lines": 25,
     "auth_events": 17,
     "ignored_lines": 8
@@ -263,7 +263,7 @@ python -m loghawk samples/auth.log --format json
 | `1` | 发现达到 `--fail-on` 级别的告警 |
 | `2` | 参数错误、文件不可读或输入处理失败 |
 
-GitHub Actions 示例：
+GitHub Actions 用法：
 
 ```yaml
 - name: Analyze SSH auth log
@@ -313,7 +313,7 @@ GitHub Actions 示例：
 │   ├── models.py
 │   ├── parser.py
 │   └── report.py
-├── samples/
+├── demo/
 │   └── auth.log
 ├── tests/
 │   ├── __init__.py
@@ -349,7 +349,7 @@ python -m unittest discover -s tests -v
 
 ```bash
 python -m compileall -q loghawk tests
-python -m loghawk samples/auth.log --format json --fail-on never
+python -m loghawk demo/auth.log --format json --fail-on never
 ```
 
 代码风格要求与贡献流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。
@@ -362,7 +362,7 @@ python -m loghawk samples/auth.log --format json --fail-on never
 ```bash
 git clone https://github.com/guoguoguo-dev/loghawk.git
 cd loghawk
-python -m loghawk samples/auth.log
+python -m loghawk demo/auth.log
 ```
 
 更新与发布流程见 [docs/publish-to-github.md](docs/publish-to-github.md)。
@@ -379,10 +379,10 @@ python -m loghawk samples/auth.log
 
 - 仅用于**授权范围内**的日志审计、应急响应与教学研究。
 - 不得将本工具用于未授权访问、凭据窃取、拒绝服务或规避安全机制。
-- 示例日志与文档中的 IP 均来自 RFC 5737 文档保留地址，不对应真实主机。
+- 演示日志与文档中的 IP 均来自 RFC 5737 文档保留地址，不对应真实主机。
 - 处理真实日志时请遵守数据最小化原则，避免把包含用户名、IP、命令的日志公开上传。
 - 发现安全问题请按 [SECURITY.md](SECURITY.md) 私下报告，不要直接开公开 Issue。
 
 ## License
 
-[MIT](LICENSE) © 2026 LogHawk contributors
+[MIT](LICENSE) © 2026 guoguoguo-dev

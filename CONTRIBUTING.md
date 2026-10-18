@@ -12,10 +12,10 @@
 ## 本地开发
 
 ```bash
-git clone https://github.com/<your-name>/loghawk.git
+git clone https://github.com/guoguoguo-dev/loghawk.git
 cd loghawk
 python -m unittest discover -s tests -v
-python -m loghawk samples/auth.log --fail-on never
+python -m loghawk demo/auth.log --fail-on never
 ```
 
 项目没有运行时第三方依赖，也不需要虚拟环境即可运行测试。仍然建议使用虚拟环境隔离
@@ -88,8 +88,8 @@ chore: update CI matrix
 
 ## 报告问题
 
-- 功能缺陷：使用 Bug Report Issue 模板。
-- 功能建议：使用 Feature Request 模板。
+- 功能缺陷：使用 Bug Report Issue 表单。
+- 功能建议：使用 Feature Request 表单。
 - 安全漏洞：按 [SECURITY.md](SECURITY.md) 私下报告。
 
 提交日志片段前请先脱敏，并说明操作系统、Python 版本、命令与预期行为。

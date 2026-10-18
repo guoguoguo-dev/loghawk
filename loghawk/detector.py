@@ -25,7 +25,7 @@ def _format_time(value: datetime) -> str:
     return value.strftime("%Y-%m-%d %H:%M:%S")
 
 
-def _line_sample(events: Sequence[AuthEvent], limit: int = _MAX_EVIDENCE_LINES) -> str:
+def _format_line_numbers(events: Sequence[AuthEvent], limit: int = _MAX_EVIDENCE_LINES) -> str:
     numbers = [str(event.line_number) for event in events[:limit]]
     if len(events) > limit:
         numbers.append(f"...（共 {len(events)} 行）")
@@ -81,7 +81,7 @@ def _detect_brute_force(
                             f"目标账号分布: {_usernames(group)}",
                             f"时间范围: {_format_time(group[0].timestamp)} ~ "
                             f"{_format_time(group[-1].timestamp)}",
-                            f"日志行号: {_line_sample(group)}",
+                            f"日志行号: {_format_line_numbers(group)}",
                         ),
                         line_numbers=tuple(event.line_number for event in group),
                         recommendation=(
@@ -143,7 +143,7 @@ def _detect_user_enumeration(
                             f"无效用户名: {rendered}",
                             f"时间范围: {_format_time(group[0].timestamp)} ~ "
                             f"{_format_time(group[-1].timestamp)}",
-                            f"日志行号: {_line_sample(group)}",
+                            f"日志行号: {_format_line_numbers(group)}",
                         ),
                         line_numbers=tuple(event.line_number for event in group),
                         recommendation=(
@@ -209,7 +209,7 @@ def _detect_success_after_failure(
                         f"此前失败: {len(prior)} 次，涉及账号 {_usernames(prior)}",
                         f"失败时间范围: {_format_time(prior[0].timestamp)} ~ "
                         f"{_format_time(prior[-1].timestamp)}",
-                        f"失败日志行号: {_line_sample(prior)}",
+                        f"失败日志行号: {_format_line_numbers(prior)}",
                     ),
                     line_numbers=tuple(
                         [event.line_number for event in prior] + [accepted.line_number]

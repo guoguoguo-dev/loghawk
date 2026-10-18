@@ -13,10 +13,10 @@ from .models import Alert, DetectionConfig, Severity
 from .parser import ParseResult, parse_file, parse_lines
 from .report import render_json, render_text
 
-_EPILOG = """示例:
-  python -m loghawk samples/auth.log
-  python -m loghawk samples/auth.log --format json --min-severity MEDIUM
-  python -m loghawk samples/auth.log --fail-on CRITICAL
+_EPILOG = """用法:
+  python -m loghawk demo/auth.log
+  python -m loghawk demo/auth.log --format json --min-severity MEDIUM
+  python -m loghawk demo/auth.log --fail-on CRITICAL
   cat /var/log/auth.log | python -m loghawk -
 
 退出码:

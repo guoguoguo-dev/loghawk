@@ -19,7 +19,7 @@ python -m unittest discover -s tests -v
 python -m compileall -q loghawk tests
 ```
 
-<!-- 补充你实际执行的命令、合成日志样例或 JSON 输出。 -->
+<!-- 补充你实际执行的命令、合成日志片段或 JSON 输出。 -->
 
 ## 检查清单
 

@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
 license-files = ["LICENSE"]
-authors = [{ name = "LogHawk contributors" }]
+authors = [{ name = "guoguoguo-dev", email = "256551196+guoguoguo-dev@users.noreply.github.com" }]
 keywords = ["security", "ssh", "log-analysis", "incident-response", "dfir"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -23,6 +23,12 @@ classifiers = [
     "Topic :: System :: Logging",
 ]
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/guoguoguo-dev/loghawk"
+Repository = "https://github.com/guoguoguo-dev/loghawk"
+Issues = "https://github.com/guoguoguo-dev/loghawk/issues"
+Changelog = "https://github.com/guoguoguo-dev/loghawk/blob/main/CHANGELOG.md"
 
 [project.scripts]
 loghawk = "loghawk.cli:entrypoint"

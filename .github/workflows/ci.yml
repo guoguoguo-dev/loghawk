@@ -38,7 +38,7 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Smoke test CLI
-        run: python -m loghawk samples/auth.log --fail-on never
+        run: python -m loghawk demo/auth.log --fail-on never
 
       - name: Smoke test non-UTF8 console fallback
         if: runner.os == 'Windows'
@@ -46,4 +46,4 @@ jobs:
         run: |
           $env:PYTHONUTF8 = "0"
           $env:PYTHONIOENCODING = "cp1252"
-          python -m loghawk samples/auth.log --fail-on never
+          python -m loghawk demo/auth.log --fail-on never

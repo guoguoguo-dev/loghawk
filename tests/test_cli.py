@@ -10,7 +10,7 @@ from unittest import mock
 from loghawk.cli import main
 
 ROOT = Path(__file__).resolve().parents[1]
-SAMPLE = ROOT / "samples" / "auth.log"
+DEMO_LOG = ROOT / "demo" / "auth.log"
 
 
 def run_cli(args):
@@ -32,7 +32,7 @@ class Cp1252Stream(io.StringIO):
 
 class CliTests(unittest.TestCase):
     def test_text_report_finds_three_rules(self):
-        code, output, _ = run_cli([str(SAMPLE)])
+        code, output, _ = run_cli([str(DEMO_LOG)])
 
         self.assertEqual(code, 1)
         self.assertIn("LH-001", output)
@@ -41,7 +41,7 @@ class CliTests(unittest.TestCase):
         self.assertIn("共 3 条告警", output)
 
     def test_json_report_is_machine_readable(self):
-        code, output, _ = run_cli([str(SAMPLE), "--format", "json"])
+        code, output, _ = run_cli([str(DEMO_LOG), "--format", "json"])
         payload = json.loads(output)
 
         self.assertEqual(code, 1)
@@ -52,12 +52,12 @@ class CliTests(unittest.TestCase):
         self.assertEqual(payload["alerts"][0]["rule_id"], "LH-002")
 
     def test_fail_on_never_returns_zero(self):
-        code, _, _ = run_cli([str(SAMPLE), "--fail-on", "never"])
+        code, _, _ = run_cli([str(DEMO_LOG), "--fail-on", "never"])
         self.assertEqual(code, 0)
 
     def test_min_severity_filters_output(self):
         code, output, _ = run_cli(
-            [str(SAMPLE), "--format", "json", "--min-severity", "CRITICAL"]
+            [str(DEMO_LOG), "--format", "json", "--min-severity", "CRITICAL"]
         )
         payload = json.loads(output)
 
@@ -69,7 +69,7 @@ class CliTests(unittest.TestCase):
         stdout = Cp1252Stream()
         stderr = io.StringIO()
         code = main(
-            [str(SAMPLE), "--fail-on", "never"],
+            [str(DEMO_LOG), "--fail-on", "never"],
             stdout=stdout,
             stderr=stderr,
         )
@@ -81,7 +81,7 @@ class CliTests(unittest.TestCase):
         stdout = Cp1252Stream()
         stderr = io.StringIO()
         code = main(
-            [str(SAMPLE), "--format", "json", "--fail-on", "never"],
+            [str(DEMO_LOG), "--format", "json", "--fail-on", "never"],
             stdout=stdout,
             stderr=stderr,
         )
@@ -97,7 +97,7 @@ class CliTests(unittest.TestCase):
         self.assertIn("无法读取输入日志", error)
 
     def test_stdin_input(self):
-        log_text = SAMPLE.read_text(encoding="utf-8")
+        log_text = DEMO_LOG.read_text(encoding="utf-8")
         with mock.patch("sys.stdin", new=io.StringIO(log_text)):
             code, output, _ = run_cli(["-", "--format", "json"])
         payload = json.loads(output)
@@ -125,7 +125,7 @@ class CliTests(unittest.TestCase):
 
     def test_invalid_year_is_rejected(self):
         with self.assertRaises(SystemExit) as context:
-            main([str(SAMPLE), "--year", "1900"])
+            main([str(DEMO_LOG), "--year", "1900"])
         self.assertEqual(context.exception.code, 2)
 
 

@@ -13,7 +13,6 @@ body:
     attributes:
       label: 要解决的问题
       description: 当前遇到了什么限制？谁会遇到？
-      placeholder: 在分析……时，现有规则无法……
     validations:
       required: true
   - type: textarea

@@ -17,7 +17,7 @@
 - CLI 阈值、时间窗口、最低告警级别、失败退出码等参数。
 - 支持普通日志、`.gz` 压缩日志与标准输入。
 - 28 项基于标准库 `unittest` 的单元与 CLI 测试。
-- GitHub Actions CI、Issue 模板、PR 模板与安全报告流程。
+- GitHub Actions CI、Issue 表单、PR 表单与安全报告流程。
 
 ### Fixed
 
