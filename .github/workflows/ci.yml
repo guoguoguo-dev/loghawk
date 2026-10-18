@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  PYTHONUTF8: "1"
+
 jobs:
   test:
     name: Python ${{ matrix.python-version }} / ${{ matrix.os }}
@@ -36,3 +39,11 @@ jobs:
 
       - name: Smoke test CLI
         run: python -m loghawk samples/auth.log --fail-on never
+
+      - name: Smoke test non-UTF8 console fallback
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $env:PYTHONUTF8 = "0"
+          $env:PYTHONIOENCODING = "cp1252"
+          python -m loghawk samples/auth.log --fail-on never

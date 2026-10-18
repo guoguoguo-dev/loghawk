@@ -5,7 +5,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Dependencies](https://img.shields.io/badge/runtime%20dependencies-0-brightgreen)](pyproject.toml)
-[![Tests](https://img.shields.io/badge/tests-26%20passed-brightgreen)](tests)
+[![Tests](https://img.shields.io/badge/tests-28%20passed-brightgreen)](tests)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 LogHawk 面向安全运维、应急响应与安全学习者：它把分散在数千行 OpenSSH 日志中的
@@ -125,7 +125,8 @@ $env:PYTHONUTF8 = "1"
 python -m loghawk samples/auth.log
 ```
 
-这只影响显示，不影响检测结果或 JSON 文件内容。
+这只影响显示，不影响检测结果或 JSON 文件内容。LogHawk 在非 UTF-8 输出流上会自动
+降级为替换字符，不会因编码异常中断；JSON 输出会自动使用 ASCII 转义保留数据。
 
 ## 检测规则
 

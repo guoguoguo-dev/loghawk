@@ -20,6 +20,16 @@ def run_cli(args):
     return code, stdout.getvalue(), stderr.getvalue()
 
 
+class Cp1252Stream(io.StringIO):
+    """模拟 Windows 上只能写 cp1252 的输出流。"""
+
+    encoding = "cp1252"
+
+    def write(self, value):
+        value.encode(self.encoding)
+        return super().write(value)
+
+
 class CliTests(unittest.TestCase):
     def test_text_report_finds_three_rules(self):
         code, output, _ = run_cli([str(SAMPLE)])
@@ -54,6 +64,32 @@ class CliTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertEqual(payload["summary"]["total"], 1)
         self.assertEqual(payload["alerts"][0]["rule_id"], "LH-002")
+
+    def test_text_output_falls_back_on_cp1252_console(self):
+        stdout = Cp1252Stream()
+        stderr = io.StringIO()
+        code = main(
+            [str(SAMPLE), "--fail-on", "never"],
+            stdout=stdout,
+            stderr=stderr,
+        )
+
+        self.assertEqual(code, 0)
+        self.assertIn("LogHawk", stdout.getvalue())
+
+    def test_json_output_is_ascii_safe_on_cp1252_console(self):
+        stdout = Cp1252Stream()
+        stderr = io.StringIO()
+        code = main(
+            [str(SAMPLE), "--format", "json", "--fail-on", "never"],
+            stdout=stdout,
+            stderr=stderr,
+        )
+        payload = json.loads(stdout.getvalue())
+
+        self.assertEqual(code, 0)
+        self.assertIn("\\u", stdout.getvalue())
+        self.assertEqual(payload["alerts"][0]["title"], "暴力破解后登录成功")
 
     def test_missing_file_returns_two(self):
         code, _, error = run_cli(["does-not-exist.log"])

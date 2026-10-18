@@ -17,7 +17,7 @@ python -m unittest discover -s tests -v
 确认：
 
 - Python 输出为 3.9 或更高版本；
-- 26 项测试全部 `OK`；
+- 28 项测试全部 `OK`；
 - 当前目录包含 `README.md`、`loghawk/`、`samples/` 等文件；
 - 没有把真实生产日志、Token、私钥或 `.env` 文件放入目录。
 

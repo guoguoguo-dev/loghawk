@@ -99,6 +99,7 @@ def render_json(
     config: DetectionConfig,
     source: str,
     version: str,
+    ensure_ascii: bool = False,
 ) -> str:
     payload = {
         "tool": {"name": "LogHawk", "version": version},
@@ -135,4 +136,4 @@ def render_json(
             for alert in alerts
         ],
     }
-    return json.dumps(payload, ensure_ascii=False, indent=2)
+    return json.dumps(payload, ensure_ascii=ensure_ascii, indent=2)

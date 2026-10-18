@@ -127,6 +127,46 @@ def _read_input(path: str, year: Optional[int]) -> tuple[ParseResult, str]:
     return parse_file(input_path, default_year=year), str(input_path)
 
 
+def _stream_encoding(stream: TextIO) -> str:
+    return getattr(stream, "encoding", None) or "utf-8"
+
+
+def _can_encode(text: str, encoding: str) -> bool:
+    try:
+        text.encode(encoding)
+    except (LookupError, UnicodeEncodeError):
+        return False
+    return True
+
+
+def _write_text(stream: TextIO, text: str) -> None:
+    """写入文本；编码不支持时降级为可显示的替换字符。"""
+
+    payload = text + "\n"
+    try:
+        stream.write(payload)
+    except UnicodeEncodeError:
+        encoding = _stream_encoding(stream)
+        try:
+            payload = payload.encode(encoding, errors="replace").decode(encoding)
+        except LookupError:
+            payload = payload.encode("utf-8", errors="replace").decode("utf-8")
+        stream.write(payload)
+
+
+def _configure_standard_streams() -> None:
+    """避免 argparse/错误信息在非 UTF-8 终端触发编码异常。"""
+
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is None:
+            continue
+        try:
+            reconfigure(errors="replace")
+        except (AttributeError, ValueError):
+            pass
+
+
 def main(
     argv: Optional[Sequence[str]] = None,
     stdout: Optional[TextIO] = None,
@@ -140,7 +180,7 @@ def main(
     try:
         parse_result, source = _read_input(args.path, args.year)
     except (OSError, EOFError) as exc:
-        print(f"错误: 无法读取输入日志: {exc}", file=errors)
+        _write_text(errors, f"错误: 无法读取输入日志: {exc}")
         return 2
 
     try:
@@ -151,13 +191,13 @@ def main(
             enumeration_threshold=args.enum_threshold,
         )
     except ValueError as exc:
-        print(f"错误: 检测参数无效: {exc}", file=errors)
+        _write_text(errors, f"错误: 检测参数无效: {exc}")
         return 2
 
     if parse_result.total_lines > 0 and parse_result.event_count == 0:
-        print(
+        _write_text(
+            errors,
             "警告: 未识别到 SSH 认证事件，请确认日志为 OpenSSH syslog 格式。",
-            file=errors,
         )
 
     all_alerts = detect(parse_result.events, config)
@@ -166,15 +206,21 @@ def main(
         alert for alert in all_alerts if alert.severity >= minimum
     ]
 
+    output_encoding = _stream_encoding(output)
     if args.format == "json":
         rendered = render_json(
-            visible_alerts, parse_result, config, source, __version__
+            visible_alerts,
+            parse_result,
+            config,
+            source,
+            __version__,
+            ensure_ascii=not _can_encode("中文", output_encoding),
         )
     else:
         rendered = render_text(
             visible_alerts, parse_result, config, source, __version__
         )
-    print(rendered, file=output)
+    _write_text(output, rendered)
 
     if args.fail_on == "never":
         return 0
@@ -183,6 +229,7 @@ def main(
 
 
 def entrypoint() -> None:
+    _configure_standard_streams()
     try:
         raise SystemExit(main())
     except BrokenPipeError:

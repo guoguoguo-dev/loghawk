@@ -16,8 +16,14 @@
 - 文本报告与稳定结构的 JSON 报告，包含行号、证据与处置建议。
 - CLI 阈值、时间窗口、最低告警级别、失败退出码等参数。
 - 支持普通日志、`.gz` 压缩日志与标准输入。
-- 26 项基于标准库 `unittest` 的单元与 CLI 测试。
+- 28 项基于标准库 `unittest` 的单元与 CLI 测试。
 - GitHub Actions CI、Issue 模板、PR 模板与安全报告流程。
+
+### Fixed
+
+- 修复 Windows 非 UTF-8 控制台下 CLI 输出中文时因 `UnicodeEncodeError`
+  退出的问题；文本输出降级为替换字符，JSON 输出改用 ASCII 转义。
+- CI 强制 UTF-8，并增加 Windows cp1252 控制台回退测试。
 
 ### Security
 
