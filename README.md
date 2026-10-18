@@ -353,19 +353,6 @@ python -m loghawk samples/auth.log --format json --fail-on never
 
 代码风格要求与贡献流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-## 发布到 GitHub
-
-本地仓库已完成初始化与首次提交后，只需要创建远程仓库并推送：
-
-```bash
-git remote add origin https://github.com/<your-name>/loghawk.git
-git branch -M main
-git push -u origin main
-```
-
-完整的建仓、认证、排错、打标签与 Release 流程见
-[docs/publish-to-github.md](docs/publish-to-github.md)。请把 `<your-name>` 替换为你的
-GitHub 用户名，不要原样提交占位符。
 
 ## 局限性
 
