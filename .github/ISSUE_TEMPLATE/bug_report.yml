@@ -1,0 +1,62 @@
+name: Bug Report
+description: 报告可复现的功能缺陷或解析问题
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请勿粘贴真实生产日志、用户名、IP、Token 或私钥。
+        如需提供日志样例，请改写成 `192.0.2.x` 等文档保留地址并删除敏感字段。
+        安全问题请按 SECURITY.md 私下报告，不要使用本模板。
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 问题描述
+      description: 实际发生了什么？你期望发生什么？
+      placeholder: 运行命令后输出……，预期应为……
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 请给出最小、可重复执行的命令或合成日志片段。
+      render: shell
+      placeholder: |
+        1. python -m loghawk sample.log
+        2. 观察到……
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: LogHawk 版本
+      description: 运行 `python -m loghawk --version` 获取。
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 运行环境
+      description: 操作系统、Python 版本与终端类型。
+      placeholder: "Windows 11, Python 3.13.15, PowerShell 7"
+    validations:
+      required: true
+  - type: textarea
+    id: additional
+    attributes:
+      label: 补充信息
+      description: 脱敏后的输出、相关日志行或你的初步判断。
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我已搜索现有 Issue，未发现重复问题
+          required: true
+        - label: 我提供的内容已脱敏，不包含真实凭据或生产日志
+          required: true
