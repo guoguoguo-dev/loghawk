@@ -21,13 +21,13 @@ LogHawk 面向安全运维、应急响应与安全学习者：它把分散在数
 - [为什么选择 LogHawk](#为什么选择-loghawk)
 - [快速开始](#快速开始)
 - [检测规则](#检测规则)
-- [命令行参考](#命令行参考)v
+- [命令行参考](#命令行参考)
 - [JSON 输出](#json-输出)
 - [退出码与 CI 集成](#退出码与-ci-集成)
 - [设计说明](#设计说明)
 - [项目结构](#项目结构)
 - [开发与测试](#开发与测试)
-- [发布到 GitHub](#发布到-github)
+- [仓库地址](#仓库地址)
 - [局限性](#局限性)
 - [安全与合规](#安全与合规)
 - [License](#license)
@@ -352,6 +352,19 @@ python -m loghawk samples/auth.log --format json --fail-on never
 ```
 
 代码风格要求与贡献流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+## 仓库地址
+
+- GitHub 仓库：[guoguoguo-dev/loghawk](https://github.com/guoguoguo-dev/loghawk)
+- 克隆地址：`https://github.com/guoguoguo-dev/loghawk.git`
+
+```bash
+git clone https://github.com/guoguoguo-dev/loghawk.git
+cd loghawk
+python -m loghawk samples/auth.log
+```
+
+更新与发布流程见 [docs/publish-to-github.md](docs/publish-to-github.md)。
 
 ## 局限性
 
